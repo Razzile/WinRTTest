@@ -50,40 +50,67 @@ class GamepadHandler {
 
       GamepadButtons btns = new_reading.Buttons;
 
-      if (ButtonJustPressed(btns)) {
-        switch (btns) {
-          case GamepadButtons::A:
-            co_return L"Button Pressed: A";
-          case GamepadButtons::B:
-             co_return L"Button Pressed: B";
-          case GamepadButtons::X:
-             co_return L"Button Pressed: X";
-          case GamepadButtons::Y:
-             co_return L"Button Pressed: Y";
-          case GamepadButtons::DPadDown:
-             co_return L"Button Pressed: DPad Down";
-          case GamepadButtons::DPadLeft:
-             co_return L"Button Pressed: DPad Left";
-          case GamepadButtons::DPadRight:
-             co_return L"Button Pressed: DPad Right";
-          case GamepadButtons::DPadUp:
-             co_return L"Button Pressed: DPad Up";
-          case GamepadButtons::LeftShoulder:
-             co_return L"Button Pressed: Left Bumper";
-          case GamepadButtons::RightShoulder:
-             co_return L"Button Pressed: Right Bumper";
-          case GamepadButtons::LeftThumbstick:
-             co_return L"Button Pressed: Left Thumbstick";
-          case GamepadButtons::RightThumbstick:
-             co_return L"Button Pressed: Right Thumbstick";
-          case GamepadButtons::Menu:
-             co_return L"Button Pressed: Start";
-          case GamepadButtons::View:
-             co_return L"Button Pressed: Select";
-          default:
-             co_return L"Button Pressed: {Unknown}";
-            break;
+      std::vector<std::wstring> buttons;
+      if (true/*ButtonJustPressed(btns)*/) {
+        if ((btns & GamepadButtons::A) == GamepadButtons::A) {
+          buttons.push_back(L"A");
         }
+        if ((btns & GamepadButtons::B) == GamepadButtons::B) {
+          buttons.push_back(L"B");
+        }
+        if ((btns & GamepadButtons::X) == GamepadButtons::X) {
+          buttons.push_back(L"X");
+        }
+        if ((btns & GamepadButtons::Y) == GamepadButtons::Y) {
+          buttons.push_back(L"Y");
+        }
+        if ((btns & GamepadButtons::DPadDown) == GamepadButtons::DPadDown) {
+          buttons.push_back(L"DPad Down");
+        }
+        if ((btns & GamepadButtons::DPadLeft) == GamepadButtons::DPadLeft) {
+          buttons.push_back(L"DPad Left");
+        }
+        if ((btns & GamepadButtons::DPadRight) == GamepadButtons::DPadRight) {
+          buttons.push_back(L"DPad Right");
+        }
+        if ((btns & GamepadButtons::DPadUp) == GamepadButtons::DPadUp) {
+          buttons.push_back(L"DPad Up");
+        }
+        if ((btns & GamepadButtons::LeftShoulder) ==
+            GamepadButtons::LeftShoulder) {
+          buttons.push_back(L"Left Bumper");
+        }
+        if ((btns & GamepadButtons::RightShoulder) ==
+            GamepadButtons::RightShoulder) {
+          buttons.push_back(L"Right Bumper");
+        }
+        if ((btns & GamepadButtons::Menu) == GamepadButtons::Menu) {
+          buttons.push_back(L"Start");
+        }
+        if ((btns & GamepadButtons::View) == GamepadButtons::View) {
+          buttons.push_back(L"Select");
+        }
+        if ((btns & GamepadButtons::RightThumbstick) ==
+            GamepadButtons::RightThumbstick) {
+          buttons.push_back(L"Right Thumbstick");
+        }
+        if ((btns & GamepadButtons::LeftThumbstick) ==
+            GamepadButtons::LeftThumbstick) {
+          buttons.push_back(L"Left Thumbstick");
+        }
+
+        if (buttons.size() < 1) {
+          co_return winrt::hstring{};
+        }
+
+        std::wstring text = L"Button(s) Pressed: ";
+        std::wstring seperator = L"";
+        for (const std::wstring& btn : buttons) {
+          text += seperator + btn;
+          seperator = L",";
+        }
+
+        co_return winrt::hstring{text};
       }
     }
   }

@@ -1,7 +1,6 @@
 ﻿#include "pch.h"
 
 #include "App.h"
-#include "MainPage.h"
 
 using namespace winrt;
 using namespace Windows::ApplicationModel;
@@ -85,10 +84,12 @@ fire_and_forget App::RunGamepadManager() {
     // switch to background thread
     co_await winrt::resume_background();
     winrt::hstring pressed = m_gamepadHandler.Poll().get();
+    // return to UI thread
+    co_await winrt::resume_foreground(m_textBlock.Dispatcher());
     if (pressed.size() > 0) {
-      // return to UI thread
-      co_await winrt::resume_foreground(m_textBlock.Dispatcher());
       m_textBlock.Text(pressed);
+    } else {
+      m_textBlock.Text(L"Press a button on your controller");
     }
     co_await 100ms;
   }
